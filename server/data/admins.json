@@ -1,0 +1,24 @@
+[
+  {
+    "id": "admin-cpsu-001",
+    "email": "admin@cpsu.edu.ph",
+    "name": "Faculty Staff",
+    "role": "CPSU Registrar",
+    "department": "Registrar's Office",
+    "salt": "a8f3b29c1d0e4f5a6b7c8d9e0f1a2b3c",
+    "passwordHash": "28eedf860013e6c68413a7d0911e272bdc88bba4dea25246ddd9f7fcbb05c4633cceadb8edcb8eb757ac00cfa7b427ec13f208a4f15d7aa203d14fff77d0cc16",
+    "active": true,
+    "createdAt": "2026-10-01T08:00:00.000Z"
+  },
+  {
+    "id": "admin-cpsu-002",
+    "email": "registrar@cpsu.edu.ph",
+    "name": "Chief Registrar",
+    "role": "CPSU Registrar Administrator",
+    "department": "Office of the University Registrar",
+    "salt": "f1e2d3c4b5a697887766554433221100",
+    "passwordHash": "73d007ed94348d11f4a5deefcaee4da33255e6233a708ace68166b43a11354f66b59e42505f2fe04241e0576ec4908938cd3de5b311c36db964c5e401ae4e3d2",
+    "active": true,
+    "createdAt": "2026-10-01T08:00:00.000Z"
+  }
+]

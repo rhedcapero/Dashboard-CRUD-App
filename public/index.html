@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management Dashboard</title>
+  <meta name="description"
+    content="Modern, responsive Student Management Dashboard with full CRUD functionality, Express.js backend, and Supabase PostgreSQL integration.">
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- ========================================================================= -->
+    <!-- SIDEBAR NAVIGATION                                                        -->
+    <!-- ========================================================================= -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+              <path d="M6 12v5c3 3 9 3 12 0v-5" />
+            </svg>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">Registrar Office</span>
+            <span class="brand-subtitle">Student Info System</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MAIN MENU</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#overview" class="nav-link active" data-section="overview-section" id="navOverview">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span>Dashboard Overview</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#students" class="nav-link" data-section="students-section" id="navStudents">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Student Records</span>
+              <span class="nav-badge" id="navStudentCount">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#courses" class="nav-link" data-section="analytics-section" id="navAnalytics">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              <span>Course Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ========================================================================= -->
+    <!-- MAIN APPLICATION WRAPPER                                                  -->
+    <!-- ========================================================================= -->
+    <div class="main-wrapper">
+
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <div class="page-title-box">
+            <h1 class="page-title" id="pageTitle">Dashboard Overview</h1>
+            <span class="page-subtitle" id="currentDateStr">Academic Year 2025–2026</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Theme Toggle Button -->
+          <button class="icon-btn theme-toggle" id="themeToggleBtn" title="Switch Theme">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <!-- Refresh Data Button -->
+          <button class="icon-btn" id="refreshAllBtn" title="Refresh Dashboard Data">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
+
+          <!-- Primary Add Student Button -->
+          <button class="btn btn-primary btn-add-header" id="headerAddStudentBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add Student</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Body Container -->
+      <main class="main-content">
+
+        <!-- Supabase Alert Banner (Shown if .env credentials missing) -->
+        <div class="alert-banner warning-banner hidden" id="dbAlertBanner">
+          <div class="banner-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <div class="banner-content">
+            <h4>Supabase Database Credentials Required</h4>
+            <p>Please configure your <code>SUPABASE_URL</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code> in
+              <code>server/.env</code> to persist live student records to Supabase PostgreSQL.
+            </p>
+          </div>
+          <div class="banner-actions">
+            <button class="btn btn-sm btn-outline-warning" id="bannerConfigGuideBtn">Setup Instructions</button>
+          </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 1: DASHBOARD OVERVIEW & SUMMARY STATS CARDS                       -->
+        <!-- ========================================================================= -->
+        <section class="dashboard-section" id="overview-section">
+
+          <!-- Summary Cards Grid -->
+          <div class="stats-grid">
+
+            <!-- Card 1: Total Students -->
+            <div class="stat-card stat-total">
+              <div class="stat-card-inner">
+                <div class="stat-info">
+                  <span class="stat-label">Total Students</span>
+                  <div class="stat-value-wrap">
+                    <h2 class="stat-value" id="statTotalStudents">--</h2>
+                    <span class="stat-trend trend-positive" title="Enrolled students">All Enrolled</span>
+                  </div>
+                  <span class="stat-subtext">Registered across all courses</span>
+                </div>
+                <div class="stat-icon-box">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-footer-bar"></div>
+            </div>
+
+            <!-- Card 2: Active Students -->
+            <div class="stat-card stat-active">
+              <div class="stat-card-inner">
+                <div class="stat-info">
+                  <span class="stat-label">Active Students</span>
+                  <div class="stat-value-wrap">
+                    <h2 class="stat-value" id="statActiveStudents">--</h2>
+                    <span class="stat-trend trend-positive" id="statActivePercentage">--%</span>
+                  </div>
+                  <span class="stat-subtext">Currently attending classes</span>
+                </div>
+                <div class="stat-icon-box">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-footer-bar"></div>
+            </div>
+
+            <!-- Card 3: Inactive Students -->
+            <div class="stat-card stat-inactive">
+              <div class="stat-card-inner">
+                <div class="stat-info">
+                  <span class="stat-label">Inactive Students</span>
+                  <div class="stat-value-wrap">
+                    <h2 class="stat-value" id="statInactiveStudents">--</h2>
+                    <span class="stat-trend trend-neutral" id="statInactivePercentage">--%</span>
+                  </div>
+                  <span class="stat-subtext">On leave or pending status</span>
+                </div>
+                <div class="stat-icon-box">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-footer-bar"></div>
+            </div>
+
+            <!-- Card 4: Recently Added Students -->
+            <div class="stat-card stat-recent">
+              <div class="stat-card-inner">
+                <div class="stat-info">
+                  <span class="stat-label">Recently Added</span>
+                  <div class="stat-value-wrap">
+                    <h2 class="stat-value" id="statRecentStudents">--</h2>
+                    <span class="stat-trend trend-blue">Last 14 Days</span>
+                  </div>
+                  <span class="stat-subtext">New registrations</span>
+                </div>
+                <div class="stat-icon-box">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="stat-footer-bar"></div>
+            </div>
+
+          </div>
+
+          <!-- Quick Overview Cards (Course Breakdown & Recent Activity) -->
+          <div class="overview-secondary-grid">
+
+            <!-- Course Distribution Card -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Students by Degree Program</h3>
+                  <p class="panel-subtitle">Enrollment distribution across degree programs</p>
+                </div>
+                <span class="badge badge-light" id="totalCoursesBadge">5 Programs</span>
+              </div>
+              <div class="panel-body">
+                <div class="course-bars-list" id="courseBreakdownList">
+                  <div class="skeleton-bar-wrap">
+                    <div class="skeleton-line full"></div>
+                    <div class="skeleton-line medium"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recently Enrolled Students List Card -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Recently Enrolled Students</h3>
+                  <p class="panel-subtitle">Latest student registrations in Supabase</p>
+                </div>
+                <button class="btn-text-link" id="viewAllStudentsLink">View All &rarr;</button>
+              </div>
+              <div class="panel-body">
+                <div class="recent-students-list" id="recentStudentsList">
+                  <div class="skeleton-row-wrap">
+                    <div class="skeleton-line full"></div>
+                    <div class="skeleton-line full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 2: STUDENT MANAGEMENT TABLE (CRUD)                                -->
+        <!-- ========================================================================= -->
+        <section class="students-section" id="students-section">
+          <div class="table-container-card">
+
+            <!-- Table Header Toolbar -->
+            <div class="table-toolbar">
+              <div class="toolbar-left">
+                <div class="section-title-wrap">
+                  <h2 class="section-heading">Student Directory</h2>
+                  <span class="records-pill" id="tableRecordCountBadge">0 Students</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Search and Filter Controls -->
+            <div class="filters-panel">
+              <!-- Search Input -->
+              <div class="search-input-box">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" class="search-input"
+                  placeholder="Search by name, student ID, or email..." autocomplete="off">
+                <button class="search-clear-btn hidden" id="clearSearchBtn" title="Clear search">
+                  &times;
+                </button>
+              </div>
+
+              <!-- Filter Dropdowns Grid -->
+              <div class="filter-controls-group">
+                <!-- Course Filter -->
+                <div class="filter-select-wrap">
+                  <label for="filterCourse" class="filter-label">Course:</label>
+                  <select id="filterCourse" class="filter-select">
+                    <option value="All">All Courses</option>
+                    <option value="BS in Hospitality Management">BS in Hospitality Management</option>
+                    <option value="BS in Criminal Justice Education">BS in Criminal Justice Education</option>
+                    <option value="BS in Teacher Education">BS in Teacher Education</option>
+                    <option value="BS in Agri Business">BS in AgriBusiness</option>
+                    <option value="BS in Information Technology">BS in Information Technology</option>
+                  </select>
+                </div>
+
+                <!-- Year Level Filter -->
+                <div class="filter-select-wrap">
+                  <label for="filterYearLevel" class="filter-label">Year Level:</label>
+                  <select id="filterYearLevel" class="filter-select">
+                    <option value="All">All Year Levels</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                  </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="filter-select-wrap">
+                  <label for="filterStatus" class="filter-label">Status:</label>
+                  <select id="filterStatus" class="filter-select">
+                    <option value="All">All Statuses</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
+
+                <!-- Sort Filter -->
+                <div class="filter-select-wrap">
+                  <label for="sortOrder" class="filter-label">Sort By:</label>
+                  <select id="sortOrder" class="filter-select">
+                    <option value="date_desc">Registration (Newest)</option>
+                    <option value="date_asc">Registration (Oldest)</option>
+                    <option value="name_asc">Name (A &rarr; Z)</option>
+                    <option value="name_desc">Name (Z &rarr; A)</option>
+                    <option value="id_asc">Student ID</option>
+                  </select>
+                </div>
+
+                <!-- Reset Filters Button -->
+                <button class="btn btn-outline btn-reset-filters" id="resetFiltersBtn" title="Reset all filters">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 2v6h6"></path>
+                    <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
+                    <path d="M21 22v-6h-6"></path>
+                    <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
+                  </svg>
+                  <span>Reset</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Filter Badges Bar -->
+            <div class="active-filter-pills hidden" id="activeFilterPills">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Table Responsive Wrapper -->
+            <div class="table-responsive">
+              <table class="data-table" id="studentsTable">
+                <thead>
+                  <tr>
+                    <th class="col-student-id">Student ID</th>
+                    <th class="col-student-name">Student Name</th>
+                    <th class="col-contact">Contact</th>
+                    <th class="col-gender">Gender</th>
+                    <th class="col-course">Course</th>
+                    <th class="col-year">Year Level</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-date">Registered Date</th>
+                    <th class="col-actions text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                  <!-- Dynamic rows rendered by app.js -->
+                </tbody>
+              </table>
+
+              <!-- Loading Skeleton State -->
+              <div class="table-skeleton hidden" id="tableSkeleton">
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+                <div class="skeleton-row"></div>
+              </div>
+
+              <!-- Empty State -->
+              <div class="empty-state hidden" id="emptyState">
+                <div class="empty-icon-wrap">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                </div>
+                <h3 class="empty-title" id="emptyTitle">No Students Found</h3>
+                <p class="empty-desc" id="emptyDesc">No student records match your current search or filter criteria.
+                </p>
+                <div class="empty-actions">
+                  <button class="btn btn-outline" id="emptyResetBtn">Clear Filters</button>
+                  <button class="btn btn-primary" id="emptyAddBtn">+ Add New Student</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table Footer Pagination / Statistics -->
+            <div class="table-footer">
+              <div class="table-info">
+                Showing <span id="showingCount">0</span> of <span id="totalCountInTable">0</span> students
+              </div>
+              <div class="table-pagination-notice">
+                <span class="live-dot"></span> Live synced with Supabase PostgreSQL
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SECTION 3: COURSE & PROGRAM ANALYTICS                                     -->
+        <!-- ========================================================================= -->
+        <section class="dashboard-section hidden" id="analytics-section">
+          <div class="analytics-container-grid">
+
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Degree Course Distribution</h3>
+                  <p class="panel-subtitle">Total students currently enrolled per academic course</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="distribution-list" id="analyticsCourseList">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Year Level Classification</h3>
+                  <p class="panel-subtitle">Distribution of students across year cohorts</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="distribution-list" id="analyticsYearList">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <!-- App Footer -->
+      <footer class="app-footer">
+        <div class="footer-content">
+          <span>Student Management Dashboard Application &bull; Built with Express.js &amp; Supabase</span>
+          <span class="footer-status-tag" id="footerDbTag">🟢 Database Active</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: ADD / EDIT STUDENT MODAL                                         -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop hidden" id="studentFormModal">
+    <div class="modal-dialog modal-lg">
+      <form id="studentForm" novalidate>
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <div class="modal-icon" id="formModalIcon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+            </div>
+            <div>
+              <h3 class="modal-title" id="formModalTitle">Add New Student</h3>
+              <p class="modal-subtitle" id="formModalSubtitle">Fill in the student details to register in the database
+              </p>
+            </div>
+          </div>
+          <button type="button" class="modal-close-btn" id="closeFormModalBtn" title="Close Modal">&times;</button>
+        </div>
+
+        <input type="hidden" id="formStudentDbId">
+        <div class="modal-body">
+
+          <!-- Validation Banner for Form -->
+          <div class="form-error-banner hidden" id="formErrorBanner">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div id="formErrorMessage">Please fix the highlighted errors below.</div>
+          </div>
+
+          <div class="form-grid">
+
+            <!-- Student ID -->
+            <div class="form-group col-span-2">
+              <label for="formStudentId" class="form-label required">Student ID</label>
+              <div class="input-with-action">
+                <input type="text" id="formStudentId" name="student_id" class="form-control"
+                  placeholder="e.g. 2024-00101" required>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="autoGenerateIdBtn"
+                  title="Generate an available student ID format">
+                  Auto-Generate
+                </button>
+              </div>
+              <small class="form-hint">Unique academic identification number.</small>
+              <span class="field-error" id="error_student_id"></span>
+            </div>
+
+            <!-- First Name -->
+            <div class="form-group">
+              <label for="formFirstName" class="form-label required">First Name</label>
+              <input type="text" id="formFirstName" name="first_name" class="form-control" placeholder="e.g. Alexander"
+                required>
+              <span class="field-error" id="error_first_name"></span>
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+              <label for="formLastName" class="form-label required">Last Name</label>
+              <input type="text" id="formLastName" name="last_name" class="form-control" placeholder="e.g. Santos"
+                required>
+              <span class="field-error" id="error_last_name"></span>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group">
+              <label for="formEmail" class="form-label required">Email Address</label>
+              <input type="email" id="formEmail" name="email" class="form-control" placeholder="e.g. student@school.edu"
+                required>
+              <span class="field-error" id="error_email"></span>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="form-group">
+              <label for="formContactNumber" class="form-label required">Contact Number</label>
+              <input type="text" id="formContactNumber" name="contact_number" class="form-control"
+                placeholder="e.g. +63 917 123 4567" required>
+              <span class="field-error" id="error_contact_number"></span>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+              <label for="formGender" class="form-label required">Gender</label>
+              <select id="formGender" name="gender" class="form-control" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-binary">Non-binary</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+              <span class="field-error" id="error_gender"></span>
+            </div>
+
+            <!-- Status -->
+            <div class="form-group">
+              <label for="formStatus" class="form-label required">Enrollment Status</label>
+              <select id="formStatus" name="status" class="form-control" required>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <span class="field-error" id="error_status"></span>
+            </div>
+
+            <!-- Course -->
+            <div class="form-group">
+              <label for="formCourse" class="form-label required">Course / Degree Program</label>
+              <select id="formCourse" name="course" class="form-control" required>
+                <option value="">Select Course</option>
+                <option value="BS in Hospitality Management">BS in Hospitality Management</option>
+                <option value="BS in Criminal Justice Education">BS in Criminal Justice Education</option>
+                <option value="BS in Teacher Education">BS in Teacher Education</option>
+                <option value="BS in Agri Business">BS in Agri Business</option>
+                <option value="BS in Information Technology">BS in Information Technology</option>
+              </select>
+              <span class="field-error" id="error_course"></span>
+            </div>
+
+            <!-- Year Level -->
+            <div class="form-group">
+              <label for="formYearLevel" class="form-label required">Year Level</label>
+              <select id="formYearLevel" name="year_level" class="form-control" required>
+                <option value="">Select Year Level</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+              <span class="field-error" id="error_year_level"></span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-cancel" id="cancelFormModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveStudentSubmitBtn">
+            <span class="btn-spinner hidden" id="saveSpinner"></span>
+            <span id="saveBtnText">Add Student</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: VIEW STUDENT DETAILS MODAL                                       -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop hidden" id="viewStudentModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon view-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title">Student Profile</h3>
+            <p class="modal-subtitle">Detailed academic and contact record</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="closeViewModalBtn" title="Close Modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Student Header Card -->
+        <div class="view-profile-header">
+          <div class="view-avatar" id="viewAvatar">JS</div>
+          <div class="view-profile-meta">
+            <h3 class="view-student-name" id="viewFullName">John Santos</h3>
+            <div class="view-badge-row">
+              <span class="student-id-pill" id="viewStudentId">2024-00101</span>
+              <span class="badge" id="viewStatusBadge">Active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="view-details-grid">
+          <div class="view-detail-item">
+            <span class="detail-label">Email Address</span>
+            <span class="detail-value" id="viewEmail">--</span>
+          </div>
+          <div class="view-detail-item">
+            <span class="detail-label">Contact Number</span>
+            <span class="detail-value" id="viewContact">--</span>
+          </div>
+          <div class="view-detail-item">
+            <span class="detail-label">Course / Degree</span>
+            <span class="detail-value" id="viewCourse">--</span>
+          </div>
+          <div class="view-detail-item">
+            <span class="detail-label">Year Level</span>
+            <span class="detail-value" id="viewYearLevel">--</span>
+          </div>
+          <div class="view-detail-item">
+            <span class="detail-label">Gender</span>
+            <span class="detail-value" id="viewGender">--</span>
+          </div>
+          <div class="view-detail-item">
+            <span class="detail-label">Date Registered</span>
+            <span class="detail-value" id="viewRegisteredDate">--</span>
+          </div>
+          <div class="view-detail-item col-span-2">
+            <span class="detail-label">Supabase Record UUID</span>
+            <span class="detail-value code-font" id="viewRecordId">--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger-outline" id="viewDeleteBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+          <span>Delete</span>
+        </button>
+        <button type="button" class="btn btn-outline" id="viewEditBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>Edit Student</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="closeViewModalBtn2">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: DELETE CONFIRMATION DIALOG                                       -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop hidden" id="deleteConfirmModal">
+    <div class="modal-dialog modal-sm">
+      <div class="delete-dialog-content">
+        <div class="delete-icon-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </div>
+        <h3 class="delete-dialog-title">Delete Student Record?</h3>
+        <p class="delete-dialog-desc">
+          Are you sure you want to delete <strong id="deleteStudentName">this student</strong> (<span
+            id="deleteStudentId">--</span>)?
+          This action will permanently remove the record from Supabase and cannot be undone.
+        </p>
+
+        <div class="delete-dialog-actions">
+          <button type="button" class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+            <span class="btn-spinner hidden" id="deleteSpinner"></span>
+            <span id="deleteBtnText">Yes, Delete Record</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 4: SUPABASE CONFIGURATION HELPER MODAL                              -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop hidden" id="dbConfigModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-icon db-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="modal-title">Supabase Database Integration</h3>
+            <p class="modal-subtitle">Quick connection guide for your second-year IT project</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="closeDbModalBtn" title="Close Modal">&times;</button>
+      </div>
+
+      <div class="modal-body db-guide-body">
+        <div class="db-status-banner-inner" id="dbStatusModalBanner">
+          <!-- Dynamic status -->
+        </div>
+
+        <div class="guide-steps">
+          <div class="guide-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Create Supabase Project &amp; Run SQL</h4>
+              <p>Go to <a href="https://supabase.com" target="_blank" rel="noopener">Supabase.com</a>, create a project,
+                and run the SQL script in <code>supabase/schema.sql</code> inside the Supabase <strong>SQL
+                  Editor</strong>.</p>
+              <div class="code-snippet-box">
+                <code>supabase/schema.sql</code>
+                <button class="btn btn-xs btn-outline" id="copySqlPathBtn">Copy SQL</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Retrieve Project Credentials</h4>
+              <p>In Supabase Dashboard, open <strong>Project Settings &rarr; API</strong> and copy your:</p>
+              <ul class="guide-list">
+                <li><strong>Project URL</strong> (e.g. <code>https://xyzcompany.supabase.co</code>)</li>
+                <li><strong>service_role Secret</strong> (recommended for backend server) or <strong>anon Public
+                    Key</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Update <code>server/.env</code></h4>
+              <p>Paste the credentials in <code>server/.env</code> file:</p>
+              <pre class="env-code-block"><code>PORT=3000
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-actual-supabase-key-here</code></pre>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Restart Express Server</h4>
+              <p>Restart the server with <code>npm start</code> to connect and manage live records.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="testDbConnectionBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Test Database Connection</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="closeDbModalBtn2">Understood</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 5: LOGOUT CONFIRMATION MODAL                                        -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop hidden" id="logoutModal">
+    <div class="modal-dialog modal-sm">
+      <div class="delete-dialog-content">
+        <div class="logout-icon-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </div>
+        <h3 class="delete-dialog-title">Admin Logout</h3>
+        <p class="delete-dialog-desc">
+          Are you sure you want to end your current dashboard administrator session?
+        </p>
+
+        <div class="delete-dialog-actions">
+          <button type="button" class="btn btn-outline" id="cancelLogoutBtn">Cancel</button>
+          <button type="button" class="btn btn-primary" id="confirmLogoutBtn">Confirm Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST NOTIFICATION CONTAINER                                              -->
+  <!-- ========================================================================= -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Core JavaScript Application -->
+  <script src="js/app.js"></script>
+</body>
+
+</html>
