@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎓 EduAdmin - Student Management Dashboard
 
 A modern, responsive, and full-featured **Student Management Dashboard Application** built with **HTML**, **CSS**, **JavaScript**, **Node.js**, **Express.js**, and **Supabase (PostgreSQL)**.
@@ -405,3 +406,6 @@ When recording your project video demonstration for your instructor (using OBS S
 
 ## 📄 License
 This project is open-source under the MIT License. Developed for academic and demonstration purposes.
+=======
+# Dashboard-CRUD-App
+>>>>>>> origin/main
