@@ -40,6 +40,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Mount API routes
+app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/dashboard', statsRoutes);
 
@@ -67,21 +68,23 @@ app.use((err, req, res, next) => {
 });
 
 // Start Express Server
-app.listen(PORT, () => {
-  console.log('========================================================');
-  console.log(`🚀 Student Management Dashboard Server is running!`);
-  console.log(`🌐 Local URL:       http://localhost:${PORT}`);
-  console.log(`📊 API Health:      http://localhost:${PORT}/api/health`);
-  console.log(`👥 Students API:    http://localhost:${PORT}/api/students`);
-  console.log(`📈 Stats API:       http://localhost:${PORT}/api/dashboard/stats`);
-  console.log('--------------------------------------------------------');
-  if (isConfigured()) {
-    console.log(`✅ Supabase status: Connected (${supabaseUrl})`);
-  } else {
-    console.log(`⚠️  Supabase status: Not yet configured`);
-    console.log(`👉 Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in server/.env`);
-  }
-  console.log('========================================================');
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('========================================================');
+    console.log(`🚀 Student Management Dashboard Server is running!`);
+    console.log(`🌐 Local URL:       http://localhost:${PORT}`);
+    console.log(`📊 API Health:      http://localhost:${PORT}/api/health`);
+    console.log(`👥 Students API:    http://localhost:${PORT}/api/students`);
+    console.log(`📈 Stats API:       http://localhost:${PORT}/api/dashboard/stats`);
+    console.log('--------------------------------------------------------');
+    if (isConfigured()) {
+      console.log(`✅ Supabase status: Connected (${supabaseUrl})`);
+    } else {
+      console.log(`⚠️  Supabase status: Not yet configured`);
+      console.log(`👉 Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in server/.env`);
+    }
+    console.log('========================================================');
+  });
+}
 
 module.exports = app;

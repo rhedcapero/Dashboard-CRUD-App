@@ -19,7 +19,10 @@ const isPlaceholder = (val) => {
   return (
     lower.includes('your-project-id') ||
     lower.includes('your-project-ref') ||
+    lower.includes('your_project_url') ||
+    lower.includes('paste_your_') ||
     lower.includes('your-supabase-service-role') ||
+    lower.includes('your_secret_key') ||
     lower.includes('placeholder')
   );
 };

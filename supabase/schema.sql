@@ -42,18 +42,21 @@ ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
 -- these policies allow appropriate CRUD access for this administrative dashboard.
 
 -- Allow Select (Read) for all roles
+DROP POLICY IF EXISTS "Allow public read access" ON public.students;
 CREATE POLICY "Allow public read access"
 ON public.students
 FOR SELECT
 USING (true);
 
 -- Allow Insert (Create) for all roles
+DROP POLICY IF EXISTS "Allow public insert access" ON public.students;
 CREATE POLICY "Allow public insert access"
 ON public.students
 FOR INSERT
 WITH CHECK (true);
 
 -- Allow Update for all roles
+DROP POLICY IF EXISTS "Allow public update access" ON public.students;
 CREATE POLICY "Allow public update access"
 ON public.students
 FOR UPDATE
@@ -61,6 +64,7 @@ USING (true)
 WITH CHECK (true);
 
 -- Allow Delete for all roles
+DROP POLICY IF EXISTS "Allow public delete access" ON public.students;
 CREATE POLICY "Allow public delete access"
 ON public.students
 FOR DELETE
